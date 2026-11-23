@@ -9,5 +9,13 @@
 // possible initial, so the letter fits its word exactly.
 import { mkdirSync, writeFileSync } from "node:fs";
 
-mkdirSync("/output", { recursive: true });
-writeFileSync("/output/entry.txt", "Q", "utf8");
+// The entry: exactly one letter, Q. Gate guard — fail loudly if the entry
+// ever stops being a single A-Z letter, rather than shipping a bad entry.
+const LETTER = "Q";
+if (!/^[A-Z]$/.test(LETTER)) {
+  throw new Error(`entry.txt must be exactly one letter A-Z, got ${JSON.stringify(LETTER)}`);
+}
+
+const dest = process.env.MAKEFUN_OUTPUT_DIR ?? "/output";
+mkdirSync(dest, { recursive: true });
+writeFileSync(`${dest}/entry.txt`, LETTER, "utf8");
